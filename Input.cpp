@@ -1,55 +1,46 @@
 
 #include <bits/stdc++.h>
+#define Max_Show 100 
 using namespace std;
-char ch1;
-class Time{
-    int hour1;
-    int hour2;
-    int minute1;
-    int minute2;
-    Time(int h1 , int m1, int h2, int m2){
-        if(h1<h2 || (h1==h2 && m1<m2))  
-        {
-            hour1 = h1;
-            hour2 = h2;
-            minute1 = m1;
-            minute2 = m2;
-        }
-    }
-};
+
 class Data
 {
 public:
-    int size;
+    int Size;
     int *Priority;
     string *UserName;
     string *ShowName;
-
-    // string TVShows[];
-
-    int CalculateRow(void)
-    {
-        int count = 0;
-        ifstream input;
-        string S;
-        input.open("TV_P9.csv");
-        while (input)
-        {
-            getline(input, S, '\n');
-            count++;
-        }
-        return (count - 5);
-        input.close();
-    }
+    int CalculateRow();
     Data()
     {
-        size = CalculateRow();
-        Priority = new int[size];
-        UserName = new string[size];
-        ShowName = new string[size];
+        Size = CalculateRow();
+        Priority = new int[Size];
+        UserName = new string[Size];
+        ShowName = new string[Max_Show];
     }
+    tuple<int, int, int, int> ConvertTimeSlot(const string &TimeSlot);
 };
+int Data ::CalculateRow(void)
+{
+    int count = 0;
+    ifstream input;
+    string S;
+    input.open("TV_P9.csv");
+    while (input)
+    {
+        getline(input, S, '\n');
+        count++;
+    }
+    return (count - 5);
+    input.close();
+}
 
+tuple<int, int, int, int> Data ::ConvertTimeSlot(const string &TimeSlot)
+{
+    int minute1, minute2, hour1, hour2;
+    sscanf(TimeSlot.c_str(), "%d:%d-%d:%d", &hour1, &minute1, &hour2, &minute2);
+    return make_tuple(hour1, minute1, hour2, minute2);
+}
 int main()
 {
     Data D;
@@ -60,17 +51,10 @@ int main()
     getline(InputFile, temp1, '\n');
     getline(InputFile, temp2, '\n');
 
-    // while(InputFile && i<D.size)
-    // {
-    //     while()
-    //     InputFile>>D.Priority[i];
-    //     getline(InputFile , D.UserName[i] , ',' );
-    //     i++;
-    // }
-    for (int i = 0; i < D.size; i++)
+    for (int i = 0; i < D.Size; i++)
     {
         InputFile >> D.Priority[i];
-        InputFile >> ch1;
+        getchar();
         getline(InputFile, D.UserName[i], ',');
     }
     InputFile.close();
