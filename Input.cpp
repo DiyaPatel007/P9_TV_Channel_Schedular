@@ -81,8 +81,38 @@ public:
             }
             SlotTime.push_back(EachMEmberTime);
 
+            string Show;
+            getline(ss, Show, ',');
+            vector<string> EAchMemberShow;
+            stringstream sshow(Show);
+            string ShowN;
+            while (getline(sshow, ShowN, ';'))
+            {
+                EAchMemberShow.push_back(ShowN);
+            }
+            ShowName.push_back(EAchMemberShow);
+            string ShowTiming;
+            getline(ss, ShowTiming, ',');
+            vector<vector<tuple<int, int, int, int>>> Member;
+            stringstream SMember(ShowTiming);
+            string ShowMember;
+            while (getline(SMember, ShowMember, '/'))
+            {
+                vector<tuple<int, int, int, int>> ShowNumber;
+                stringstream SNumber(ShowMember);
+                string ShowNum;
+                while (getline(SNumber, ShowNum, ';'))
+                {
+                    ShowNumber.push_back(ConvertTimeSlot(ShowNum));
+                }
+                Member.push_back(ShowNumber);
+            }
+            ShowTime.push_back(Member);
             i++;
         }
         InputFile.close();
     }
 };
+
+
+          
