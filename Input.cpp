@@ -3,8 +3,11 @@ using namespace std;
 class Data
 {
 public:
+    int *ans1=0;
+    int *ans2=0;
     int Size;
     int *Priority;
+    vector<string> Line;
     string *UserName;
     vector<vector<string>> ShowName;
     vector<vector<vector<tuple<int, int, int, int>>>> SlotTime;
@@ -16,6 +19,10 @@ public:
         cout << "The size is : " << Size << endl;
         Priority = new int[Size];
         UserName = new string[Size];
+        ans1 = new int[Size];
+        ans2 = new int[Size];
+        fill(ans1, ans1 + Size, 0);//To set vector NULL
+        fill(ans2, ans2 + Size, 0);
     }
 
     int CalculateRow()
@@ -31,13 +38,22 @@ public:
 
         input.close();
         int result = (count - 1);
-        return max(0, result);
+        return max(0, result);//to avoid negative value
     }
-
-    tuple<int, int, int, int> ConvertTimeSlot(const string &TimeSlot)
+    int i = 0;
+    tuple<int, int, int, int> ConvertFreeTimeSlot(const string &TimeSlot)
     {
         int minute1, minute2, hour1, hour2;
         sscanf(TimeSlot.c_str(), "%d:%d-%d:%d", &hour1, &minute1, &hour2, &minute2);
+        ans1[i]+=(hour2*60+minute2)-(hour1*60+minute1);
+        return make_tuple(hour1, minute1, hour2, minute2);
+    }
+
+    tuple<int, int, int, int> ConvertShowTimeSlot(const string &TimeSlot)
+    {
+        int minute1, minute2, hour1, hour2;
+        sscanf(TimeSlot.c_str(), "%d:%d-%d:%d", &hour1, &minute1, &hour2, &minute2);
+        ans2[i]+=(hour2*60+minute2)-(hour1*60+minute1);
         return make_tuple(hour1, minute1, hour2, minute2);
     }
 
@@ -53,7 +69,6 @@ public:
         string temp1;
         getline(InputFile, temp1, '\n');
         string Row;
-        int i = 0;
         while (getline(InputFile, Row) && i < Size)
         {
             stringstream ss(Row);
@@ -75,10 +90,11 @@ public:
                 string Slot;
                 while (getline(sSlot, Slot, ';'))
                 {
-                    EachDay.push_back(ConvertTimeSlot(Slot));
+                    EachDay.push_back(ConvertFreeTimeSlot(Slot));
                 }
                 EachMEmberTime.push_back(EachDay);
             }
+            
             SlotTime.push_back(EachMEmberTime);
 
             string Show;
@@ -103,7 +119,7 @@ public:
                 string ShowNum;
                 while (getline(SNumber, ShowNum, ';'))
                 {
-                    ShowNumber.push_back(ConvertTimeSlot(ShowNum));
+                    ShowNumber.push_back(ConvertShowTimeSlot(ShowNum));
                 }
                 Member.push_back(ShowNumber);
             }
@@ -112,7 +128,18 @@ public:
         }
         InputFile.close();
     }
+    void Linesvector(){
+        ifstream Input;
+        Input.open("TV_P9.csv");
+        string temp;
+        getline(Input , temp , '\n');
+        int i=0;
+        while(i<Size){
+            string L;
+            getline(Input, L , '\n');
+            Line.push_back(L);
+            i++;
+        }
+        Input.close();    
+    }
 };
-
-
-          

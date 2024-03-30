@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
-#include"Input.cpp"
+#include "Input.cpp"
+
 int main()
 {
     Data D;
