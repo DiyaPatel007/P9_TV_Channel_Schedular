@@ -1,25 +1,24 @@
 #include <bits/stdc++.h>
+#include "CompareTimeSlot.cpp"
 using namespace std;
-int Stoi(const string& str) {
+int Stoi(const string &str)
+{
     int result = 0;
     int sign = 1;
     size_t i = 0;
-
-    // Skip leading whitespace
-    while (std::isspace(str[i])) {
+    while (isspace(str[i]))
+    {
         i++;
     }
-
-    // Check for sign
-    if (str[i] == '-' || str[i] == '+') {
+    if (str[i] == '-' || str[i] == '+')
+    {
         sign = (str[i++] == '-') ? -1 : 1;
     }
 
-    // Process digits
-    while (std::isdigit(str[i])) {
+    while (isdigit(str[i]))
+    {
         result = result * 10 + (str[i++] - '0');
     }
-
     return sign * result;
 }
 class Data
@@ -30,10 +29,14 @@ public:
     int Size;
     int *IndexNumber;
     vector<string> Line;
+    vector<vector<int>> DaywiseFreeTime;
+    vector<vector<int>> DaywiseShowTime;
     string *UserName;
     vector<vector<string>> ShowName;
     vector<vector<vector<tuple<int, int, int, int>>>> SlotTime;
     vector<vector<vector<tuple<int, int, int, int>>>> ShowTime;
+    vector<vector<vector<tuple<int, int, int, int>>>> RecordTime;
+    vector<vector<vector<tuple<int, int, int, int>>>> MissingTime;
 
     Data()
     {
@@ -66,7 +69,7 @@ public:
     {
         int minute1, minute2, hour1, hour2;
         sscanf(TimeSlot.c_str(), "%d:%d-%d:%d", &hour1, &minute1, &hour2, &minute2);
-        ans1[i] += (hour2 * 60 + minute2) - (hour1 * 60 + minute1);
+        // ans1[i] += (hour2 * 60 + minute2) - (hour1 * 60 + minute1);
         return make_tuple(hour1, minute1, hour2, minute2);
     }
 
@@ -74,7 +77,7 @@ public:
     {
         int minute1, minute2, hour1, hour2;
         sscanf(TimeSlot.c_str(), "%d:%d-%d:%d", &hour1, &minute1, &hour2, &minute2);
-        ans2[i] += (hour2 * 60 + minute2) - (hour1 * 60 + minute1);
+        // ans2[i] += (hour2 * 60 + minute2) - (hour1 * 60 + minute1);
         return make_tuple(hour1, minute1, hour2, minute2);
     }
 
@@ -104,19 +107,31 @@ public:
             vector<vector<tuple<int, int, int, int>>> EachMEmberTime;
             stringstream sEachMember(Time);
             string TimeEachDay;
+            vector<int> Diff_T;
             while (getline(sEachMember, TimeEachDay, '/'))
             {
                 vector<tuple<int, int, int, int>> EachDay;
                 stringstream sSlot(TimeEachDay);
                 string Slot;
+
+                int diff = 0;
+
                 while (getline(sSlot, Slot, ';'))
                 {
+
+                    tuple<int, int, int, int> temp = ConvertFreeTimeSlot(Slot);
+
+                    diff += ((get<2>(temp) * 60 + get<3>(temp)) - (get<0>(temp) * 60 + get<1>(temp)));
+                    ans1[i] += ((get<2>(temp) * 60 + get<3>(temp)) - (get<0>(temp) * 60 + get<1>(temp)));
                     EachDay.push_back(ConvertFreeTimeSlot(Slot));
                 }
+
                 EachMEmberTime.push_back(EachDay);
+                Diff_T.push_back(diff);
             }
 
             SlotTime.push_back(EachMEmberTime);
+            DaywiseFreeTime.push_back(Diff_T);
 
             string Show;
             getline(ss, Show, ',');
@@ -133,18 +148,25 @@ public:
             vector<vector<tuple<int, int, int, int>>> Member;
             stringstream SMember(ShowTiming);
             string ShowMember;
+            vector<int> Diff;
             while (getline(SMember, ShowMember, '/'))
             {
                 vector<tuple<int, int, int, int>> ShowNumber;
                 stringstream SNumber(ShowMember);
                 string ShowNum;
+                int diff = 0;
                 while (getline(SNumber, ShowNum, ';'))
                 {
-                    ShowNumber.push_back(ConvertShowTimeSlot(ShowNum));
+                    tuple<int, int, int, int> temp = ConvertFreeTimeSlot(ShowNum);
+                    diff += ((get<2>(temp) * 60 + get<3>(temp)) - (get<0>(temp) * 60 + get<1>(temp)));
+                    ans2[i] += ((get<2>(temp) * 60 + get<3>(temp)) - (get<0>(temp) * 60 + get<1>(temp)));
+                    ShowNumber.push_back(ConvertFreeTimeSlot(ShowNum));
                 }
                 Member.push_back(ShowNumber);
+                Diff.push_back(diff);
             }
             ShowTime.push_back(Member);
+            DaywiseShowTime.push_back(Diff);
 
             i++;
         }
@@ -189,15 +211,15 @@ public:
 
         for (int i = 0; i < Line.size(); i++)
         {
-            SortedFile << Line[i] << endl;//Writing updated data in new Sorted.cpp file
+            SortedFile << Line[i] << endl; // Writing updated data in new Sorted.cpp file
         }
         SortedFile.close();
         Input.close();
     }
     void ReadSorted()
     {
-        i=0;
-         ifstream InputFile("Sorted.csv");
+        i = 0;
+        ifstream InputFile("Sorted.csv");
         if (!InputFile.is_open())
         {
             cout << "Error opening file!" << endl;
@@ -221,19 +243,30 @@ public:
             vector<vector<tuple<int, int, int, int>>> EachMEmberTime;
             stringstream sEachMember(Time);
             string TimeEachDay;
+            vector<int> Diff_T;
             while (getline(sEachMember, TimeEachDay, '/'))
             {
                 vector<tuple<int, int, int, int>> EachDay;
                 stringstream sSlot(TimeEachDay);
                 string Slot;
+
+                int diff = 0;
+
                 while (getline(sSlot, Slot, ';'))
                 {
+
+                    tuple<int, int, int, int> temp = ConvertFreeTimeSlot(Slot);
+                    diff += ((get<2>(temp) * 60 + get<3>(temp)) - (get<0>(temp) * 60 + get<1>(temp)));
+                    ans1[i] += ((get<2>(temp) * 60 + get<3>(temp)) - (get<0>(temp) * 60 + get<1>(temp)));
                     EachDay.push_back(ConvertFreeTimeSlot(Slot));
                 }
+
                 EachMEmberTime.push_back(EachDay);
+                Diff_T.push_back(diff);
             }
 
             SlotTime.push_back(EachMEmberTime);
+            DaywiseFreeTime.push_back(Diff_T);
 
             string Show;
             getline(ss, Show, ',');
@@ -250,19 +283,26 @@ public:
             vector<vector<tuple<int, int, int, int>>> Member;
             stringstream SMember(ShowTiming);
             string ShowMember;
+            vector<int> Diff;
             while (getline(SMember, ShowMember, '/'))
             {
                 vector<tuple<int, int, int, int>> ShowNumber;
                 stringstream SNumber(ShowMember);
                 string ShowNum;
+                int diff = 0;
                 while (getline(SNumber, ShowNum, ';'))
                 {
-                    ShowNumber.push_back(ConvertShowTimeSlot(ShowNum));
+                    tuple<int, int, int, int> temp = ConvertFreeTimeSlot(ShowNum);
+                    diff += ((get<2>(temp) * 60 + get<3>(temp)) - (get<0>(temp) * 60 + get<1>(temp)));
+                    ans2[i] += ((get<2>(temp) * 60 + get<3>(temp)) - (get<0>(temp) * 60 + get<1>(temp)));
+                    ShowNumber.push_back(ConvertFreeTimeSlot(ShowNum));
                 }
                 Member.push_back(ShowNumber);
+                Diff.push_back(diff);
             }
             ShowTime.push_back(Member);
-            
+            DaywiseShowTime.push_back(Diff);
+
             string TotalShowTime;
             getline(ss, TotalShowTime, ',');
             ans2[i] = Stoi(TotalShowTime);
