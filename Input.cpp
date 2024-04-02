@@ -1,5 +1,27 @@
 #include <bits/stdc++.h>
 using namespace std;
+int Stoi(const string& str) {
+    int result = 0;
+    int sign = 1;
+    size_t i = 0;
+
+    // Skip leading whitespace
+    while (std::isspace(str[i])) {
+        i++;
+    }
+
+    // Check for sign
+    if (str[i] == '-' || str[i] == '+') {
+        sign = (str[i++] == '-') ? -1 : 1;
+    }
+
+    // Process digits
+    while (std::isdigit(str[i])) {
+        result = result * 10 + (str[i++] - '0');
+    }
+
+    return sign * result;
+}
 class Data
 {
 public:
@@ -73,7 +95,7 @@ public:
             stringstream ss(Row);
             string IndexNumberRow;
             getline(ss, IndexNumberRow, ',');
-            IndexNumber[i] = stoi(IndexNumberRow);
+            IndexNumber[i] = Stoi(IndexNumberRow);
             getline(ss, UserName[i], ',');
 
             string Time;
@@ -159,8 +181,8 @@ public:
              {
             int pos1 = x.find_last_of(",") + 1;
             int pos2 = y.find_last_of(",") + 1;
-            int value1 = stoi(x.substr(pos1));
-            int value2 = stoi(y.substr(pos2));
+            int value1 = Stoi(x.substr(pos1));
+            int value2 = Stoi(y.substr(pos2));
             return value1 < value2; });
         ofstream SortedFile;
         SortedFile.open("Sorted.csv");
@@ -171,5 +193,84 @@ public:
         }
         SortedFile.close();
         Input.close();
+    }
+    void ReadSorted()
+    {
+        i=0;
+         ifstream InputFile("Sorted.csv");
+        if (!InputFile.is_open())
+        {
+            cout << "Error opening file!" << endl;
+            return;
+        }
+
+        string temp1;
+        getline(InputFile, temp1, '\n');
+        string Row;
+        while (getline(InputFile, Row) && i < Size)
+        {
+            stringstream ss(Row);
+            string IndexNumberRow;
+            getline(ss, IndexNumberRow, ',');
+            IndexNumber[i] = Stoi(IndexNumberRow);
+            getline(ss, UserName[i], ',');
+
+            string Time;
+            getline(ss, Time, ',');
+
+            vector<vector<tuple<int, int, int, int>>> EachMEmberTime;
+            stringstream sEachMember(Time);
+            string TimeEachDay;
+            while (getline(sEachMember, TimeEachDay, '/'))
+            {
+                vector<tuple<int, int, int, int>> EachDay;
+                stringstream sSlot(TimeEachDay);
+                string Slot;
+                while (getline(sSlot, Slot, ';'))
+                {
+                    EachDay.push_back(ConvertFreeTimeSlot(Slot));
+                }
+                EachMEmberTime.push_back(EachDay);
+            }
+
+            SlotTime.push_back(EachMEmberTime);
+
+            string Show;
+            getline(ss, Show, ',');
+            vector<string> EAchMemberShow;
+            stringstream sshow(Show);
+            string ShowN;
+            while (getline(sshow, ShowN, ';'))
+            {
+                EAchMemberShow.push_back(ShowN);
+            }
+            ShowName.push_back(EAchMemberShow);
+            string ShowTiming;
+            getline(ss, ShowTiming, ',');
+            vector<vector<tuple<int, int, int, int>>> Member;
+            stringstream SMember(ShowTiming);
+            string ShowMember;
+            while (getline(SMember, ShowMember, '/'))
+            {
+                vector<tuple<int, int, int, int>> ShowNumber;
+                stringstream SNumber(ShowMember);
+                string ShowNum;
+                while (getline(SNumber, ShowNum, ';'))
+                {
+                    ShowNumber.push_back(ConvertShowTimeSlot(ShowNum));
+                }
+                Member.push_back(ShowNumber);
+            }
+            ShowTime.push_back(Member);
+            
+            string TotalShowTime;
+            getline(ss, TotalShowTime, ',');
+            ans2[i] = Stoi(TotalShowTime);
+            string TotalFreeTime;
+            getline(ss, TotalFreeTime, '\n');
+            ans1[i] = Stoi(TotalFreeTime);
+            i++;
+        }
+        InputFile.close();
     }
 };
