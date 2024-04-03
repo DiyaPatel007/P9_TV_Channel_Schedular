@@ -313,4 +313,42 @@ public:
         }
         InputFile.close();
     }
+
+    void MakeFunction();
 };
+
+void Data ::MakeFunction()
+{
+    ReadSorted();
+    int i;
+    for (i = 0; i < Size; i++)
+    {
+        vector<vector<tuple<int, int, int, int>>> Temp1;
+        vector<vector<tuple<int, int, int, int>>> Temp2;
+        for (int j = 0; j < SlotTime[i].size(); j++)
+        {
+            vector<tuple<int, int, int, int>> Temp3;
+            vector<tuple<int, int, int, int>> Temp4;
+            for (int k = 0; k < SlotTime[i][j].size(); k++)
+            {
+
+                for(int l=0;l<ShowTime[i][j].size();l++)
+                {
+                if (!(CompareShowAndFreeTime(SlotTime[i][j][k], ShowTime[i][j][l])))
+                {
+                    Temp3.push_back(ShowTime[i][j][l]);
+                    Temp4.push_back(SlotTime[i][j][k]);
+                    Temp1.push_back(Temp3);
+                    Temp2.push_back(Temp4);
+                    RecordTime.push_back(Temp1);
+                    MissingTime.push_back(Temp2);
+                }
+                }
+            }
+            // Temp1.push_back(Temp3);
+            // Temp2.push_back(Temp4);
+        }
+        // RecordTime.push_back(Temp1);
+        // MissingTime.push_back(Temp2);
+    }
+}
