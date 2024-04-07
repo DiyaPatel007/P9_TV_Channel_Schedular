@@ -10,11 +10,11 @@ conflict of interest. Also, members want to get on time for p slots. The Schedul
 needs to minimize total episode misses.
 
 # Comments:
-● Input data will be a file (can be txt or xls) with records in the format\n
-○ Family member name \n
-○ Availability slots (will be a set of time intervals for each of 7 days)\n
-○ Set (S) of favorite TV series (S <= M)\n
-● Conflict of interest means two or more overlapping intervals\n
-● “Also, members want to get on time for p slots”: This means for at least p slots (out of S), every member wants to be on time and not wait.\n
+● Input data will be a file (can be txt or xls) with records in the format<br>
+○ Family member name<br>
+○ Availability slots (will be a set of time intervals for each of 7 days)<br>
+○ Set (S) of favorite TV series (S <= M)<br>
+● Conflict of interest means two or more overlapping intervals<br>
+● “Also, members want to get on time for p slots”: This means for at least p slots (out of S), every member wants to be on time and not wait.<br>
 
 
