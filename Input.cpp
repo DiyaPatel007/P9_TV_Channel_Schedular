@@ -299,3 +299,66 @@ void Data ::HandleConflict()
         
     }
 }
+    void Data :: DisplayInput(){
+    for (int i = 0; i < Size; i++)
+    {
+        cout<<BLUE;Print_line('-',80);cout<<RESET;
+        cout<<BLUE;Print_line('-',80);cout<<RESET;
+        cout <<MAGENTA<< "IndexNumber: " <<RESET<< IndexNumber[i] << endl;
+        cout << MAGENTA <<"Member Name: " <<RESET<< UserName[i] <<RESET<< endl;
+        cout <<MAGENTA<< "Slot Time : " <<RESET<< endl;
+        cout<<BLUE;
+        Print_line('-',80);
+        cout<<RESET;
+        for (int j = 0; j < SlotTime[i].size(); j++)
+        {
+            cout<<BLUE;
+    Print_line('-',80);
+    cout<<RESET;
+            cout <<" | "<<CYAN<<" Day " << j + 1 <<RESET<<" | " <<endl;
+            
+            for (int k = 0; k < SlotTime[i][j].size(); k++)
+            {
+                cout <<" | "<< "Slot " << k + 1 << " : " << setw(2) << get<0>(SlotTime[i][j][k]) << ":" << setw(2) << setfill('0') << get<1>(SlotTime[i][j][k]) << " - " << setw(2) << get<2>(SlotTime[i][j][k]) << ":" << setw(2) << setfill('0') << get<3>(SlotTime[i][j][k]) << "\t  "<<" | ";
+                
+            }
+            
+            
+            cout<<endl;
+            
+        }
+        cout<<BLUE;Print_line('-',80);cout<<RESET;
+        cout << MAGENTA<<"Free minutes = "<<RESET << ans1[i] << endl;
+        cout<<BLUE;Print_line('-',80);cout<<RESET;
+     
+        cout<<endl;
+        cout <<MAGENTA<< "Show Name:" << endl;
+        cout<<BLUE;Print_line('-',80);cout<<RESET;
+        cout<<endl;
+        for (int j = 0; j < ShowName[i].size(); j++)
+        {
+            cout <<" | "<< "Show " << j + 1 << " : " << ShowName[i][j] <<"\t "<<" | ";
+        }
+        cout<<endl;
+        cout<<BLUE;Print_line('-',80);cout<<RESET;
+        cout <<MAGENTA<<"Show Time:"<<endl;
+        cout<<BLUE;Print_line('-',80);cout<<RESET;
+        for (int j = 0; j < ShowTime[i].size(); j++)
+        {
+            cout <<" | "<< CYAN<<"Day " << j + 1 <<RESET<<" | "<< endl;
+            for (int k = 0; k < ShowTime[i][j].size(); k++)
+            {
+                cout <<" | "<<"Slot " << k + 1 << " : " << setw(2) << get<0>(ShowTime[i][j][k]) << ":" << setw(2) << setfill('0') << get<1>(ShowTime[i][j][k]) << " - " << setw(2) << get<2>(ShowTime[i][j][k]) << ":" << setw(2) << setfill('0') << get<3>(ShowTime[i][j][k]) << "\t"<<" | ";
+            }
+
+            cout<<endl;
+            cout<<BLUE;Print_line('-',80);cout<<RESET;
+
+        }
+        
+        cout<<BLUE;Print_line('-',80);cout<<RESET;
+        cout << MAGENTA<<"Show Time minutes = "<<RESET << ans2[i] << endl;
+        cout<<BLUE;Print_line('-',80);cout<<RESET;
+        cout << endl;
+    }
+}
