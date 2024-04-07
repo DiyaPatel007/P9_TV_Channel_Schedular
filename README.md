@@ -17,4 +17,9 @@ needs to minimize total episode misses.
 ● Conflict of interest means two or more overlapping intervals<br>
 ● “Also, members want to get on time for p slots”: This means for at least p slots (out of S), every member wants to be on time and not wait.<br>
 
+Description of our project
+In this code we are taking a csv file of the family members as the input to our code. The input file contains necessary details of the family member name,its free time,its show time and also the show name liked by the family member.
+As output,we are going to display the recorded shows of the user,also user is able to watch the recorded show on its free time.
+The main feature of our code is that it is able to handle the conflict of the user having same shows as well as the the user having different shows at the same time.
+With this our code could successfully able to schedule time for the family members thus giving the desired output to them. 
 
