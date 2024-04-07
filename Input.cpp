@@ -299,6 +299,106 @@ void Data ::HandleConflict()
         
     }
 }
+    void Data ::MakeFunction()
+{
+    HandleConflict();
+    cout<<BLUE;
+            Print_line('-',80);
+            cout<<RESET;
+            cout<<GREEN<<"=> User Having Same Free Time And Show Time"<<endl;
+            cout<<RESET;
+            cout<<BLUE;
+            Print_line('-',80);
+            cout<<RESET;
+    
+    for (int j = 0; j < 7; j++)
+    {
+        cout<<BLUE;
+        Print_line('-',80);
+        cout<<RESET;
+        cout<<MAGENTA<<"=> Day : "<<j+1<<RESET<<endl;
+        bool same = false;
+        bool lessthan = false;
+        bool greaterthan = false;
+        vector<vector<tuple<int, int, int, int>>> Record2D;
+        vector<vector<tuple<int, int, int, int>>> Watch2D;
+        for (int i = 0; i < Size; i++)
+        {
+            same = false;
+            lessthan = false;
+            greaterthan = false;
+            vector<tuple<int, int, int, int>> Record1D;
+            vector<tuple<int, int, int, int>> Watch1D;
+            for (int k = SlotTime[i][j].size() - 1; k >= 0; k--)
+            {
+                for (int l = ShowTime[i][j].size() - 1; l >= 0; l--)
+                {
+                    int CompareResult = Compare(SlotTime[i][j][k], ShowTime[i][j][l]);
+
+                    if ((get<0>(ShowTime[i][j][l]) == 25) && (get<1>(ShowTime[i][j][l]) == 25) && (get<2>(ShowTime[i][j][l]) == 25) && (get<3>(ShowTime[i][j][l]) == 25))
+                    {
+                        TotalShowMiss++;
+                    }
+                    else
+                    {
+                        if (CompareResult == 0)
+                        {
+                            Watch1D.push_back(ShowTime[i][j][l]);
+                            cout << UserName[i] << " is Watching " << ShowName[i][l] << " at " << get<0>(ShowTime[i][j][l]) << ":" << setw(2) << setfill('0') << get<1>(ShowTime[i][j][l]) << "-" << setw(2) << setfill('0') << get<2>(ShowTime[i][j][l]) << ":" << setw(2) << setfill('0') << get<3>(ShowTime[i][j][l]) << endl;
+
+                            auto it = find(SlotTime[i][j].begin(), SlotTime[i][j].end(), SlotTime[i][j][k]);
+                            SlotTime[i][j].erase(it);
+                            same = true;
+                        }
+                        else if (CompareResult == 1)
+                        {
+                            auto it = find(Record1D.begin(), Record1D.end(), ShowTime[i][j][l]);
+                            auto it1 = find(Watch1D.begin(), Watch1D.end(), ShowTime[i][j][l]);
+                            if ((it == Record1D.end()) && (it1 == Watch1D.end()))
+                            Record1D.push_back(ShowTime[i][j][l]);
+                            greaterthan = true;
+                        }
+
+                        else if (CompareResult == -1)
+                        {
+                            auto it = find(Record1D.begin(), Record1D.end(), ShowTime[i][j][l]);
+                            if (it == Record1D.end())
+                            {
+                                Record1D.push_back(ShowTime[i][j][l]);
+                            }
+                            lessthan = true;
+                        }
+                    }
+                }
+            }
+            if (same == false)
+            {
+                tuple<int, int, int, int> Temp = make_tuple(0, 0, 0, 0);
+                Watch1D.push_back(make_tuple(0, 0, 0, 0));
+                same = true;
+            }
+            if (greaterthan || lessthan)
+            {
+                Record2D.push_back(Record1D);
+
+            } 
+            if (same)
+            {
+                Watch2D.push_back(Watch1D);
+            }
+
+        }
+        if (greaterthan || lessthan)
+        {
+            RecordTime.push_back(Record2D);
+        }
+        if (same)
+        {
+            WatchTime.push_back(Watch2D);
+        }
+        
+    }
+}
     void Data :: DisplayInput(){
     for (int i = 0; i < Size; i++)
     {
@@ -316,14 +416,11 @@ void Data ::HandleConflict()
     Print_line('-',80);
     cout<<RESET;
             cout <<" | "<<CYAN<<" Day " << j + 1 <<RESET<<" | " <<endl;
-            
             for (int k = 0; k < SlotTime[i][j].size(); k++)
             {
                 cout <<" | "<< "Slot " << k + 1 << " : " << setw(2) << get<0>(SlotTime[i][j][k]) << ":" << setw(2) << setfill('0') << get<1>(SlotTime[i][j][k]) << " - " << setw(2) << get<2>(SlotTime[i][j][k]) << ":" << setw(2) << setfill('0') << get<3>(SlotTime[i][j][k]) << "\t  "<<" | ";
                 
             }
-            
-            
             cout<<endl;
             
         }
@@ -360,5 +457,24 @@ void Data ::HandleConflict()
         cout << MAGENTA<<"Show Time minutes = "<<RESET << ans2[i] << endl;
         cout<<BLUE;Print_line('-',80);cout<<RESET;
         cout << endl;
+    }
+}
+void Data :: DisplayRecord(){
+    for (int i = 0; i < RecordTime.size(); i++)
+    {
+        cout <<CYAN<<"Day " << i + 1 <<RESET<<endl;
+        for (int j = 0; j < RecordTime[i].size(); j++)
+        {
+            cout <<MAGENTA<< UserName[j] <<RESET<< endl;
+            for (int k = 0; k < RecordTime[i][j].size(); k++)
+            {
+                cout<<" | "<<"Slot "<<k+1<<" : ";
+                cout << get<0>(RecordTime[i][j][k]) << ":" << setw(2) << setfill('0') << get<1>(RecordTime[i][j][k]) << "-" << setw(2) << setfill('0') << get<2>(RecordTime[i][j][k]) << ":" << setw(2) << setfill('0') << get<3>(RecordTime[i][j][k]) <<"\t  "<<" | ";
+            }
+            cout<<endl;
+            cout<<BLUE;Print_line('-',80);cout<<RESET;
+        }
+
+        cout<<BLUE;Print_line('-',80);cout<<RESET;
     }
 }
