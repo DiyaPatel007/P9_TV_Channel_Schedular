@@ -1,3 +1,8 @@
+
+/*Assumption ::
+==> All time slots are of 1 hour
+==> When one user is watching Tv any other show will not be recorded on other channel 
+*/
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -51,7 +56,7 @@ public:
     int *ans1 = 0; // Total Free Time of each user of a week
     int *ans2 = 0; // Total Show Time of each user of a week
     int Size;
-    int TotalShowMiss = 0;
+    int TotalShowMiss = 0;//TotalShowMiss indicates when the There is Conflict Between two users The user which show time will be 25:25-25:25 for that user that show will be always missed 
     int *IndexNumber;
     vector<string> Line;
     string *UserName;
@@ -64,7 +69,7 @@ public:
     tuple<int, int, int, int> ConvertTimeSlot(const string &TimeSlot); // ConvertTimeSlot converts a time string into the tuple
     void ReadCSV();                                                    // ReadCSV function to read the csv file
     void HandleConflict();                                             // HandleConflict function that handles conflict according to priority of the user when there is conflict between two users it allows to watch the user who has the highest priority
-                           // This(HandleConflict) Function also handles the case when multiple user likes same shows at the same time
+                                                                       // This(HandleConflict) Function also handles the case when multiple user likes same shows at the same time
     void MakeFunction(); // MakeFunction function is used to record and watch all the necessary time of the user
     void DisplayInput();
     void Print_line(char symbol,int number);
@@ -299,7 +304,7 @@ void Data ::HandleConflict()
         
     }
 }
-    void Data ::MakeFunction()
+void Data ::MakeFunction()
 {
     HandleConflict();
     cout<<BLUE;
@@ -414,8 +419,62 @@ void Data ::HandleConflict()
         }
         
     }
+    cout << endl;
+    cout<<BLUE;Print_line('-',80);cout<<RESET;
+    cout<<GREEN<<"=> Recorded Shows"<<RESET<<endl;
+    cout<<BLUE;Print_line('-',80);cout<<RESET;
+    DisplayRecord();
+    cout<<BLUE;Print_line('-',80);cout<<RESET;
+    cout<<GREEN<<"=> User Watching Recorded Shows In Free Time on the Same Day"<<RESET<<endl;
+    cout<<BLUE;Print_line('-',80);cout<<RESET;
+    
+    for (int j = 0; j < 7; j++)
+    {
+        bool flag=false;
+        cout<<BLUE;Print_line('-',80);cout<<RESET;
+        cout<<MAGENTA<<"=> Day : "<<j+1<<RESET<<endl;
+        for (int i = 0; i < Size; i++)
+        {
+            
+            for (int k = 0; k < SlotTime[i][j].size(); k++)
+            {
+                if (get<0>(SlotTime[i][j][k]) == 0 && get<1>(SlotTime[i][j][k]) == 0 && get<1>(SlotTime[i][j][k]) == 0 && get<1>(SlotTime[i][j][k]) == 0)
+                {
+                    continue;
+                }
+                else
+                {
+                    for (int l = RecordTime[j][i].size() - 1; l >= 0; l--)
+                    {
+                        if (Compare(SlotTime[i][j][k], RecordTime[j][i][l]) == -1)
+                        {
+                            flag=true;
+                            cout << UserName[i] << " is Watching " << ShowName[i][l] << " at " << get<0>(SlotTime[i][j][k]) << ":" << setw(2) << setfill('0') << get<1>(SlotTime[i][j][k]) << "-" << setw(2) << setfill('0') << get<2>(SlotTime[i][j][k]) << ":" << setw(2) << setfill('0') << get<3>(SlotTime[i][j][k]) << endl;
+                            auto it = find(RecordTime[j][i].begin(), RecordTime[j][i].end(), RecordTime[j][i][l]);
+                            RecordTime[j][i].erase(it);
+                            if (RecordTime[j][i].empty())
+                            {
+                                RecordTime[j][i].push_back(make_tuple(0, 0, 0, 0));
+                            }
+
+                            auto it2 = find(SlotTime[i][j].begin(), SlotTime[i][j].end(), SlotTime[i][j][k]);
+                            SlotTime[i][j].erase(it2);
+                            if (SlotTime[i][j].empty())
+                            {
+                                SlotTime[i][j].push_back(make_tuple(0, 0, 0, 0));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(flag==false){
+            cout<<"No user has free time to watch the recorded show on that day"<<endl;
+        }
+    }
 }
-    void Data :: DisplayInput(){
+
+void Data :: DisplayInput(){
     for (int i = 0; i < Size; i++)
     {
         cout<<BLUE;Print_line('-',80);cout<<RESET;
@@ -432,11 +491,14 @@ void Data ::HandleConflict()
     Print_line('-',80);
     cout<<RESET;
             cout <<" | "<<CYAN<<" Day " << j + 1 <<RESET<<" | " <<endl;
+            
             for (int k = 0; k < SlotTime[i][j].size(); k++)
             {
                 cout <<" | "<< "Slot " << k + 1 << " : " << setw(2) << get<0>(SlotTime[i][j][k]) << ":" << setw(2) << setfill('0') << get<1>(SlotTime[i][j][k]) << " - " << setw(2) << get<2>(SlotTime[i][j][k]) << ":" << setw(2) << setfill('0') << get<3>(SlotTime[i][j][k]) << "\t  "<<" | ";
                 
             }
+            
+            
             cout<<endl;
             
         }
