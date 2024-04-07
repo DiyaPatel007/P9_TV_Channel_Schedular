@@ -348,6 +348,22 @@ void Data ::HandleConflict()
 
                             auto it = find(SlotTime[i][j].begin(), SlotTime[i][j].end(), SlotTime[i][j][k]);
                             SlotTime[i][j].erase(it);
+                            if (SlotTime[i][j].empty())
+                            {
+                                SlotTime[i][j].push_back(make_tuple(0, 0, 0, 0));
+                            }
+                            auto it2 = find(Record1D.begin(), Record1D.end(), ShowTime[i][j][l]);
+                            if (!(it2 == Record1D.end()))
+                            {
+                                Record1D.erase(it2);
+                            }
+                            auto it1 = find(ShowTime[i][j].begin(), ShowTime[i][j].end(), ShowTime[i][j][l]);
+
+                            ShowTime[i][j].erase(it1);
+                            if (ShowTime[i][j].empty())
+                            {
+                                ShowTime[i][j].push_back(make_tuple(0, 0, 0, 0));
+                            }
                             same = true;
                         }
                         else if (CompareResult == 1)
