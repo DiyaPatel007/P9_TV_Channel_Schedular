@@ -31,6 +31,7 @@ With this our code could successfully able to schedule time for the family membe
 -ReadCSV</br>
 -HandleConflict</br>
 -CompareTimeSlot</br>
+-Report Making</br>
 </br>
 ● Dhruvil Patel(202301201) - 25%</br>
 -MakeFunction</br>
